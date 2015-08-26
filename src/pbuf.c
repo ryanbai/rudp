@@ -62,6 +62,7 @@
  */
 
 #include "opt.h"
+#include "sys.h"
 
 #include "stats.h"
 #include "def.h"

@@ -73,7 +73,7 @@
  * Mainly for compatibility to old versions.
  */
 #ifndef NO_SYS_NO_TIMERS
-#define NO_SYS_NO_TIMERS                0
+#define NO_SYS_NO_TIMERS                1
 #endif
 
 /**

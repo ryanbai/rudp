@@ -44,7 +44,7 @@
 #include "pbuf.h"
 #include "tcp_impl.h"
 #include "sys.h"
-#include "timers.h"
+//#include "timers.h"
 #include "stats.h"
 
 #include <string.h>

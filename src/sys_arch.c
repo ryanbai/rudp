@@ -44,7 +44,7 @@
  *    will block until there is more room instead of just
  *    leaking messages.
  */
-#include "lwip/debug.h"
+#include "debug.h"
 
 #include <string.h>
 #include <sys/time.h>
@@ -53,9 +53,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "lwip/sys.h"
-#include "lwip/opt.h"
-#include "lwip/stats.h"
+#include "sys.h"
+#include "opt.h"
+#include "stats.h"
 
 #define UMAX(a, b)      ((a) > (b) ? (a) : (b))
 
