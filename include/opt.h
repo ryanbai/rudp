@@ -103,7 +103,7 @@
  * already use it.
  */
 #ifndef MEM_LIBC_MALLOC
-#define MEM_LIBC_MALLOC                 0
+#define MEM_LIBC_MALLOC                 1
 #endif
 
 /**
@@ -121,7 +121,7 @@
  *    2 byte alignment -> #define MEM_ALIGNMENT 2
  */
 #ifndef MEM_ALIGNMENT
-#define MEM_ALIGNMENT                   1
+#define MEM_ALIGNMENT                   4
 #endif
 
 /**
@@ -678,28 +678,18 @@
 #define LWIP_CALLBACK_API               1
 #endif
 
-
 /*
    ----------------------------------
    ---------- Pbuf options ----------
    ----------------------------------
 */
 /**
- * PBUF_LINK_HLEN: the number of bytes that should be allocated for a
- * link level header. The default is 14, the standard value for
- * Ethernet.
- */
-#ifndef PBUF_LINK_HLEN
-#define PBUF_LINK_HLEN                  (14 + ETH_PAD_SIZE)
-#endif
-
-/**
  * PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. The default is
  * designed to accomodate single full size TCP frame in one pbuf, including
  * TCP_MSS, IP header, and link header.
  */
 #ifndef PBUF_POOL_BUFSIZE
-#define PBUF_POOL_BUFSIZE               LWIP_MEM_ALIGN_SIZE(TCP_MSS+40+PBUF_LINK_HLEN)
+#define PBUF_POOL_BUFSIZE               LWIP_MEM_ALIGN_SIZE(TCP_MSS+40)
 #endif
 
 /*

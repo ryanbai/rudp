@@ -49,15 +49,10 @@ extern "C" {
 
 typedef enum {
   PBUF_TRANSPORT,
-  PBUF_IP,
-  PBUF_LINK,
-  PBUF_RAW
 } pbuf_layer;
 
 typedef enum {
   PBUF_RAM, /* pbuf data is stored in RAM */
-  PBUF_ROM, /* pbuf data is stored in ROM */
-  PBUF_REF, /* pbuf comes from the pbuf pool */
   PBUF_POOL /* pbuf payload refers to RAM */
 } pbuf_type;
 
@@ -109,25 +104,11 @@ struct pbuf {
   u16_t ref;
 };
 
-#if LWIP_SUPPORT_CUSTOM_PBUF
-/** Prototype for a function to free a custom pbuf */
-typedef void (*pbuf_free_custom_fn)(struct pbuf *p);
-
-/** A custom pbuf: like a pbuf, but following a function pointer to free it. */
-struct pbuf_custom {
-  /** The actual pbuf */
-  struct pbuf pbuf;
-  /** This function is called when pbuf_free deallocates this pbuf(_custom) */
-  pbuf_free_custom_fn custom_free_function;
-};
-#endif /* LWIP_SUPPORT_CUSTOM_PBUF */
-
-#if LWIP_TCP && TCP_QUEUE_OOSEQ
 /** Define this to 0 to prevent freeing ooseq pbufs when the PBUF_POOL is empty */
 #ifndef PBUF_POOL_FREE_OOSEQ
 #define PBUF_POOL_FREE_OOSEQ 1
 #endif /* PBUF_POOL_FREE_OOSEQ */
-#if NO_SYS && PBUF_POOL_FREE_OOSEQ
+
 extern volatile u8_t pbuf_free_ooseq_pending;
 void pbuf_free_ooseq();
 /** When not using sys_check_timeouts(), call PBUF_CHECK_FREE_OOSEQ()
@@ -137,18 +118,11 @@ void pbuf_free_ooseq();
   /* pbuf_alloc() reported PBUF_POOL to be empty -> try to free some \
      ooseq queued pbufs now */ \
   pbuf_free_ooseq(); }}while(0)
-#endif /* NO_SYS && PBUF_POOL_FREE_OOSEQ*/
-#endif /* LWIP_TCP && TCP_QUEUE_OOSEQ */
 
 /* Initializes the pbuf module. This call is empty for now, but may not be in future. */
 #define pbuf_init()
 
 struct pbuf *pbuf_alloc(pbuf_layer l, u16_t length, pbuf_type type);
-#if LWIP_SUPPORT_CUSTOM_PBUF
-struct pbuf *pbuf_alloced_custom(pbuf_layer l, u16_t length, pbuf_type type,
-                                 struct pbuf_custom *p, void *payload_mem,
-                                 u16_t payload_mem_len);
-#endif /* LWIP_SUPPORT_CUSTOM_PBUF */
 void pbuf_realloc(struct pbuf *p, u16_t size); 
 u8_t pbuf_header(struct pbuf *p, s16_t header_size);
 void pbuf_ref(struct pbuf *p);
@@ -159,17 +133,6 @@ void pbuf_chain(struct pbuf *head, struct pbuf *tail);
 struct pbuf *pbuf_dechain(struct pbuf *p);
 err_t pbuf_copy(struct pbuf *p_to, struct pbuf *p_from);
 u16_t pbuf_copy_partial(struct pbuf *p, void *dataptr, u16_t len, u16_t offset);
-err_t pbuf_take(struct pbuf *buf, const void *dataptr, u16_t len);
-struct pbuf *pbuf_coalesce(struct pbuf *p, pbuf_layer layer);
-#if LWIP_CHECKSUM_ON_COPY
-err_t pbuf_fill_chksum(struct pbuf *p, u16_t start_offset, const void *dataptr,
-                       u16_t len, u16_t *chksum);
-#endif /* LWIP_CHECKSUM_ON_COPY */
-
-u8_t pbuf_get_at(struct pbuf* p, u16_t offset);
-u16_t pbuf_memcmp(struct pbuf* p, u16_t offset, const void* s2, u16_t n);
-u16_t pbuf_memfind(struct pbuf* p, const void* mem, u16_t mem_len, u16_t start_offset);
-u16_t pbuf_strstr(struct pbuf* p, const char* substr);
 
 #ifdef __cplusplus
 }

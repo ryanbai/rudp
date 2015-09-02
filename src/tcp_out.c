@@ -90,7 +90,7 @@ tcp_output_alloc_header(struct tcp_pcb *pcb, u16_t optlen, u16_t datalen,
                       u32_t seqno_be /* already in network byte order */)
 {
   struct tcp_hdr *tcphdr;
-  struct pbuf *p = pbuf_alloc(PBUF_IP, TCP_HLEN + optlen + datalen, PBUF_RAM);
+  struct pbuf *p = pbuf_alloc(PBUF_TRANSPORT, TCP_HLEN + optlen + datalen, PBUF_RAM);
   if (p != NULL) {
     LWIP_ASSERT("check that first pbuf can hold struct tcp_hdr",
                  (p->len >= TCP_HLEN + optlen));
@@ -468,7 +468,7 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
        * a segment. A header will never be prepended. */
       if (apiflags & TCP_WRITE_FLAG_COPY) {
         /* Data is copied */
-        if ((concat_p = tcp_pbuf_prealloc(PBUF_RAW, seglen, space, &oversize, pcb, apiflags, 1)) == NULL) {
+        if ((concat_p = tcp_pbuf_prealloc(PBUF_TRANSPORT, seglen, space, &oversize, pcb, apiflags, 1)) == NULL) {
           LWIP_DEBUGF(TCP_OUTPUT_DEBUG | 2,
                       ("tcp_write : could not allocate memory for pbuf copy size %"U16_F"\n",
                        seglen));
@@ -483,7 +483,7 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
 #endif /* TCP_CHECKSUM_ON_COPY */
       } else {
         /* Data is not copied */
-        if ((concat_p = pbuf_alloc(PBUF_RAW, seglen, PBUF_ROM)) == NULL) {
+        if ((concat_p = pbuf_alloc(PBUF_TRANSPORT, seglen, PBUF_RAM)) == NULL) {
           LWIP_DEBUGF(TCP_OUTPUT_DEBUG | 2,
                       ("tcp_write: could not allocate memory for zero-copy pbuf\n"));
           goto memerr;
@@ -544,7 +544,7 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
 #if TCP_OVERSIZE
       LWIP_ASSERT("oversize == 0", oversize == 0);
 #endif /* TCP_OVERSIZE */
-      if ((p2 = pbuf_alloc(PBUF_TRANSPORT, seglen, PBUF_ROM)) == NULL) {
+      if ((p2 = pbuf_alloc(PBUF_TRANSPORT, seglen, PBUF_RAM)) == NULL) {
         LWIP_DEBUGF(TCP_OUTPUT_DEBUG | 2, ("tcp_write: could not allocate memory for zero-copy pbuf\n"));
         goto memerr;
       }
@@ -1168,7 +1168,7 @@ tcp_rst(u32_t seqno, u32_t ackno,
 {
   struct pbuf *p;
   struct tcp_hdr *tcphdr;
-  p = pbuf_alloc(PBUF_IP, TCP_HLEN, PBUF_RAM);
+  p = pbuf_alloc(PBUF_TRANSPORT, TCP_HLEN, PBUF_RAM);
   if (p == NULL) {
       LWIP_DEBUGF(TCP_DEBUG, ("tcp_rst: could not allocate memory for pbuf\n"));
       return;
