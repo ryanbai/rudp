@@ -212,7 +212,7 @@ tcp_input(struct ip_addr_t remote_udp_ip, u16_t remote_udp_port, struct pbuf *p)
     for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
       LWIP_ASSERT("tcp_input: TIME-WAIT pcb->state == TIME-WAIT", pcb->state == TIME_WAIT);
       if (pcb->conn_id.connid1 == tcphdr->connid1 &&
-              pcb->conn_id.connid2 == tcphdr->connid2) {
+              pcb->conn_id.connid2 == tcphdr-> connid2) {
         /* We don't really care enough to move this PCB to the front
            of the list since we are not very likely to receive that
            many segments for connections in TIME-WAIT. */

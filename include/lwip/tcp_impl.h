@@ -529,8 +529,7 @@ s16_t tcp_pcbs_sane(void);
 /** External function (implemented in timers.c), called when TCP detects
  * that a timer is needed (i.e. active- or time-wait-pcb found). */
 void tcp_timer_needed(void);
-typedef err_t (*IpOutputIf)(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port);
-IpOutputIf ip_output_if;
+err_t ip_output_if(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port);
 
 #if LWIP_IPV4
 void tcp_netif_ipv4_addr_changed(const ip4_addr_t* old_addr, const ip4_addr_t* new_addr);
