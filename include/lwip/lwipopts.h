@@ -67,5 +67,7 @@
 #define NO_SYS_NO_TIMERS 1
 #define LWIP_DEBUG 1
 #define LWIP_STATS_DISPLAY 1
+#define MEMP_NUM_SYS_TIMEOUT 1
+#define LWIP_DEBUG_TIMERNAMES 1
 
 #endif /* __LWIPOPTS_H__ */
