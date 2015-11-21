@@ -106,32 +106,11 @@
 #if (PBUF_POOL_BUFSIZE <= MEM_ALIGNMENT)
   #error "PBUF_POOL_BUFSIZE must be greater than MEM_ALIGNMENT or the offset may take the full first pbuf"
 #endif
-#if LWIP_TCPIP_CORE_LOCKING_INPUT && !LWIP_TCPIP_CORE_LOCKING
-  #error "When using LWIP_TCPIP_CORE_LOCKING_INPUT, LWIP_TCPIP_CORE_LOCKING must be enabled, too"
-#endif
-#if LWIP_TCP && LWIP_NETIF_TX_SINGLE_PBUF && !TCP_OVERSIZE
-  #error "LWIP_NETIF_TX_SINGLE_PBUF needs TCP_OVERSIZE enabled to create single-pbuf TCP packets"
-#endif
-#if IP_FRAG && IP_FRAG_USES_STATIC_BUF && LWIP_NETIF_TX_SINGLE_PBUF
-  #error "LWIP_NETIF_TX_SINGLE_PBUF does not work with IP_FRAG_USES_STATIC_BUF==1 as that creates pbuf queues"
-#endif
 
 /* Compile-time checks for deprecated options.
  */
-#ifdef MEMP_NUM_TCPIP_MSG
-  #error "MEMP_NUM_TCPIP_MSG option is deprecated. Remove it from your lwipopts.h."
-#endif
 #ifdef TCP_REXMIT_DEBUG
   #error "TCP_REXMIT_DEBUG option is deprecated. Remove it from your lwipopts.h."
-#endif
-#ifdef RAW_STATS
-  #error "RAW_STATS option is deprecated. Remove it from your lwipopts.h."
-#endif
-#ifdef ETHARP_QUEUE_FIRST
-  #error "ETHARP_QUEUE_FIRST option is deprecated. Remove it from your lwipopts.h."
-#endif
-#ifdef ETHARP_ALWAYS_INSERT
-  #error "ETHARP_ALWAYS_INSERT option is deprecated. Remove it from your lwipopts.h."
 #endif
 
 #ifndef LWIP_DISABLE_TCP_SANITY_CHECKS
