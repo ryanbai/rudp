@@ -52,54 +52,12 @@
 #ifndef BYTE_ORDER
   #error "BYTE_ORDER is not defined, you have to define it in your cc.h"
 #endif
-#if (!IP_SOF_BROADCAST && IP_SOF_BROADCAST_RECV)
-  #error "If you want to use broadcast filter per pcb on recv operations, you have to define IP_SOF_BROADCAST=1 in your lwipopts.h"
-#endif
-#if (!LWIP_UDP && LWIP_UDPLITE)
-  #error "If you want to use UDP Lite, you have to define LWIP_UDP=1 in your lwipopts.h"
-#endif
-#if (!LWIP_UDP && LWIP_DHCP)
-  #error "If you want to use DHCP, you have to define LWIP_UDP=1 in your lwipopts.h"
-#endif
-#if (!LWIP_UDP && LWIP_IGMP)
-  #error "If you want to use IGMP, you have to define LWIP_UDP=1 in your lwipopts.h"
-#endif
-#if (!LWIP_UDP && LWIP_SNMP)
-  #error "If you want to use SNMP, you have to define LWIP_UDP=1 in your lwipopts.h"
-#endif
-#if (!LWIP_UDP && LWIP_DNS)
-  #error "If you want to use DNS, you have to define LWIP_UDP=1 in your lwipopts.h"
-#endif
 #if !MEMP_MEM_MALLOC /* MEMP_NUM_* checks are disabled when not using the pool allocator */
-#if (LWIP_ARP && ARP_QUEUEING && (MEMP_NUM_ARP_QUEUE<=0))
-  #error "If you want to use ARP Queueing, you have to define MEMP_NUM_ARP_QUEUE>=1 in your lwipopts.h"
-#endif
-#if (LWIP_RAW && (MEMP_NUM_RAW_PCB<=0))
-  #error "If you want to use RAW, you have to define MEMP_NUM_RAW_PCB>=1 in your lwipopts.h"
-#endif
-#if (LWIP_UDP && (MEMP_NUM_UDP_PCB<=0))
-  #error "If you want to use UDP, you have to define MEMP_NUM_UDP_PCB>=1 in your lwipopts.h"
-#endif
 #if (LWIP_TCP && (MEMP_NUM_TCP_PCB<=0))
   #error "If you want to use TCP, you have to define MEMP_NUM_TCP_PCB>=1 in your lwipopts.h"
 #endif
-#if (LWIP_IGMP && (MEMP_NUM_IGMP_GROUP<=1))
-  #error "If you want to use IGMP, you have to define MEMP_NUM_IGMP_GROUP>1 in your lwipopts.h"
-#endif
-#if (LWIP_IGMP && !LWIP_MULTICAST_TX_OPTIONS)
-  #error "If you want to use IGMP, you have to define LWIP_MULTICAST_TX_OPTIONS==1 in your lwipopts.h"
-#endif
-#if (LWIP_IGMP && !LWIP_IPV4)
-  #error "IGMP needs LWIP_IPV4 enabled in your lwipopts.h"
-#endif
-#if (LWIP_MULTICAST_TX_OPTIONS && !LWIP_IPV4)
-  #error "LWIP_MULTICAST_TX_OPTIONS needs LWIP_IPV4 enabled in your lwipopts.h"
-#endif
-#if ((LWIP_NETCONN || LWIP_SOCKET) && (MEMP_NUM_TCPIP_MSG_API<=0))
-  #error "If you want to use Sequential API, you have to define MEMP_NUM_TCPIP_MSG_API>=1 in your lwipopts.h"
-#endif
 /* There must be sufficient timeouts, taking into account requirements of the subsystems. */
-#if LWIP_TIMERS && (MEMP_NUM_SYS_TIMEOUT < (LWIP_TCP + IP_REASSEMBLY + LWIP_ARP + (2*LWIP_DHCP) + LWIP_AUTOIP + LWIP_IGMP + LWIP_DNS + PPP_SUPPORT + (LWIP_IPV6 ? (1 + LWIP_IPV6_REASS + LWIP_IPV6_MLD) : 0)))
+#if LWIP_TIMERS && (MEMP_NUM_SYS_TIMEOUT < LWIP_TCP)
   #error "MEMP_NUM_SYS_TIMEOUT is too low to accomodate all required timeouts"
 #endif
 #if (IP_REASSEMBLY && (MEMP_NUM_REASSDATA > IP_REASS_MAX_PBUFS))
@@ -136,33 +94,6 @@
 #if (LWIP_TCP && TCP_LISTEN_BACKLOG && ((TCP_DEFAULT_LISTEN_BACKLOG < 0) || (TCP_DEFAULT_LISTEN_BACKLOG > 0xff)))
   #error "If you want to use TCP backlog, TCP_DEFAULT_LISTEN_BACKLOG must fit into an u8_t"
 #endif
-#if (LWIP_NETIF_API && (NO_SYS==1))
-  #error "If you want to use NETIF API, you have to define NO_SYS=0 in your lwipopts.h"
-#endif
-#if ((LWIP_SOCKET || LWIP_NETCONN) && (NO_SYS==1))
-  #error "If you want to use Sequential API, you have to define NO_SYS=0 in your lwipopts.h"
-#endif
-#if (LWIP_PPP_API && (NO_SYS==1))
-  #error "If you want to use PPP API, you have to define NO_SYS=0 in your lwipopts.h"
-#endif
-#if (LWIP_PPP_API && (PPP_SUPPORT==0))
-  #error "If you want to use PPP API, you have to enable PPP_SUPPORT in your lwipopts.h"
-#endif
-#if (((!LWIP_DHCP) || (!LWIP_AUTOIP)) && LWIP_DHCP_AUTOIP_COOP)
-  #error "If you want to use DHCP/AUTOIP cooperation mode, you have to define LWIP_DHCP=1 and LWIP_AUTOIP=1 in your lwipopts.h"
-#endif
-#if (((!LWIP_DHCP) || (!LWIP_ARP)) && DHCP_DOES_ARP_CHECK)
-  #error "If you want to use DHCP ARP checking, you have to define LWIP_DHCP=1 and LWIP_ARP=1 in your lwipopts.h"
-#endif
-#if (!LWIP_ARP && LWIP_AUTOIP)
-  #error "If you want to use AUTOIP, you have to define LWIP_ARP=1 in your lwipopts.h"
-#endif
-#if (LWIP_SNMP && (SNMP_CONCURRENT_REQUESTS<=0))
-  #error "If you want to use SNMP, you have to define SNMP_CONCURRENT_REQUESTS>=1 in your lwipopts.h"
-#endif
-#if (LWIP_SNMP && (SNMP_TRAP_DESTINATIONS<=0))
-  #error "If you want to use SNMP, you have to define SNMP_TRAP_DESTINATIONS>=1 in your lwipopts.h"
-#endif
 #if (LWIP_TCP && ((LWIP_EVENT_API && LWIP_CALLBACK_API) || (!LWIP_EVENT_API && !LWIP_CALLBACK_API)))
   #error "One and exactly one of LWIP_EVENT_API and LWIP_CALLBACK_API has to be enabled in your lwipopts.h"
 #endif
@@ -175,27 +106,6 @@
 #if (PBUF_POOL_BUFSIZE <= MEM_ALIGNMENT)
   #error "PBUF_POOL_BUFSIZE must be greater than MEM_ALIGNMENT or the offset may take the full first pbuf"
 #endif
-#if (DNS_LOCAL_HOSTLIST && !DNS_LOCAL_HOSTLIST_IS_DYNAMIC && !(defined(DNS_LOCAL_HOSTLIST_INIT)))
-  #error "you have to define define DNS_LOCAL_HOSTLIST_INIT {{'host1', 0x123}, {'host2', 0x234}} to initialize DNS_LOCAL_HOSTLIST"
-#endif
-#if PPP_SUPPORT && !PPPOS_SUPPORT && !PPPOE_SUPPORT && !PPPOL2TP_SUPPORT
-  #error "PPP_SUPPORT needs at least one of PPPOS_SUPPORT, PPPOE_SUPPORT or PPPOL2TP_SUPPORT turned on"
-#endif
-#if PPP_SUPPORT && !PPP_IPV4_SUPPORT && !PPP_IPV6_SUPPORT
-  #error "PPP_SUPPORT needs PPP_IPV4_SUPPORT and/or PPP_IPV6_SUPPORT turned on"
-#endif
-#if PPP_SUPPORT && PPP_IPV4_SUPPORT && !LWIP_IPV4
-  #error "PPP_IPV4_SUPPORT needs LWIP_IPV4 turned on"
-#endif
-#if PPP_SUPPORT && PPP_IPV6_SUPPORT && !LWIP_IPV6
-  #error "PPP_IPV6_SUPPORT needs LWIP_IPV6 turned on"
-#endif
-#if !LWIP_ETHERNET && (LWIP_ARP || PPPOE_SUPPORT)
-  #error "LWIP_ETHERNET needs to be turned on for LWIP_ARP or PPPOE_SUPPORT"
-#endif
-#if (LWIP_IGMP || LWIP_IPV6) && !defined(LWIP_RAND)
-  #error "When using IGMP or IPv6, LWIP_RAND() needs to be defined to a random-function returning an u32_t random value"
-#endif
 #if LWIP_TCPIP_CORE_LOCKING_INPUT && !LWIP_TCPIP_CORE_LOCKING
   #error "When using LWIP_TCPIP_CORE_LOCKING_INPUT, LWIP_TCPIP_CORE_LOCKING must be enabled, too"
 #endif
@@ -205,27 +115,6 @@
 #if IP_FRAG && IP_FRAG_USES_STATIC_BUF && LWIP_NETIF_TX_SINGLE_PBUF
   #error "LWIP_NETIF_TX_SINGLE_PBUF does not work with IP_FRAG_USES_STATIC_BUF==1 as that creates pbuf queues"
 #endif
-#if LWIP_NETCONN && LWIP_TCP
-#if NETCONN_COPY != TCP_WRITE_FLAG_COPY
-  #error "NETCONN_COPY != TCP_WRITE_FLAG_COPY"
-#endif
-#if NETCONN_MORE != TCP_WRITE_FLAG_MORE
-  #error "NETCONN_MORE != TCP_WRITE_FLAG_MORE"
-#endif
-#endif /* LWIP_NETCONN && LWIP_TCP */ 
-#if LWIP_SOCKET
-/* Check that the SO_* socket options and SOF_* lwIP-internal flags match */
-#if SO_REUSEADDR != SOF_REUSEADDR
-  #error "WARNING: SO_REUSEADDR != SOF_REUSEADDR"
-#endif
-#if SO_KEEPALIVE != SOF_KEEPALIVE
-  #error "WARNING: SO_KEEPALIVE != SOF_KEEPALIVE"
-#endif
-#if SO_BROADCAST != SOF_BROADCAST
-  #error "WARNING: SO_BROADCAST != SOF_BROADCAST"
-#endif
-#endif /* LWIP_SOCKET */
-
 
 /* Compile-time checks for deprecated options.
  */
@@ -251,21 +140,6 @@
 #ifndef LWIP_DISABLE_MEMP_SANITY_CHECKS
 #define LWIP_DISABLE_MEMP_SANITY_CHECKS 0
 #endif
-
-/* MEMP sanity checks */
-#if !LWIP_DISABLE_MEMP_SANITY_CHECKS
-#if LWIP_NETCONN
-#if MEMP_MEM_MALLOC
-#if !MEMP_NUM_NETCONN && LWIP_SOCKET
-#error "lwip_sanity_check: WARNING: MEMP_NUM_NETCONN cannot be 0 when using sockets!"
-#endif
-#else /* MEMP_MEM_MALLOC */
-#if MEMP_NUM_NETCONN > (MEMP_NUM_TCP_PCB+MEMP_NUM_TCP_PCB_LISTEN+MEMP_NUM_UDP_PCB+MEMP_NUM_RAW_PCB)
-#error "lwip_sanity_check: WARNING: MEMP_NUM_NETCONN should be less than the sum of MEMP_NUM_{TCP,RAW,UDP}_PCB+MEMP_NUM_TCP_PCB_LISTEN. If you know what you are doing, define LWIP_DISABLE_MEMP_SANITY_CHECKS to 1 to disable this error."
-#endif
-#endif /* MEMP_MEM_MALLOC */
-#endif /* LWIP_NETCONN */
-#endif /* !LWIP_DISABLE_MEMP_SANITY_CHECKS */
 
 #if 0
 

@@ -92,16 +92,6 @@
 #define SMEMCPY(dst,src,len)            memcpy(dst,src,len)
 #endif
 
-/**
- * LWIP_MPU_COMPATIBLE: enables special memory management mechanism
- * which makes lwip able to work on MPU (Memory Protection Unit) system
- * by not passing stack-pointers to other threads
- * (this decreases performance)
- */
-#ifndef LWIP_MPU_COMPATIBLE
-#define LWIP_MPU_COMPATIBLE             0
-#endif
-
 /*
    ------------------------------------
    ---------- Memory options ----------
@@ -183,14 +173,6 @@
 #endif
 
 /**
- * MEM_USE_POOLS_TRY_BIGGER_POOL==1: if one malloc-pool is empty, try the next
- * bigger pool - WARNING: THIS MIGHT WASTE MEMORY but it can make a system more
- * reliable. */
-#ifndef MEM_USE_POOLS_TRY_BIGGER_POOL
-#define MEM_USE_POOLS_TRY_BIGGER_POOL   0
-#endif
-
-/**
  * MEMP_USE_CUSTOM_POOLS==1: whether to include a user file lwippools.h
  * that defines additional pools beyond the "standard" ones required
  * by lwIP. If you set this to 1, you must have lwippools.h in your 
@@ -198,28 +180,6 @@
  */
 #ifndef MEMP_USE_CUSTOM_POOLS
 #define MEMP_USE_CUSTOM_POOLS           0
-#endif
-
-/**
- * Set this to 1 if you want to free PBUF_RAM pbufs (or call mem_free()) from
- * interrupt context (or another context that doesn't allow waiting for a
- * semaphore).
- * If set to 1, mem_malloc will be protected by a semaphore and SYS_ARCH_PROTECT,
- * while mem_free will only use SYS_ARCH_PROTECT. mem_malloc SYS_ARCH_UNPROTECTs
- * with each loop so that mem_free can run.
- *
- * ATTENTION: As you can see from the above description, this leads to dis-/
- * enabling interrupts often, which can be slow! Also, on low memory, mem_malloc
- * can need longer.
- *
- * If you don't want that, at least for NO_SYS=0, you can still use the following
- * functions to enqueue a deallocation call which then runs in the tcpip_thread
- * context:
- * - pbuf_free_callback(p);
- * - mem_free_callback(m);
- */
-#ifndef LWIP_ALLOW_MEM_FREE_FROM_OTHER_CONTEXT
-#define LWIP_ALLOW_MEM_FREE_FROM_OTHER_CONTEXT 0
 #endif
 
 /*
@@ -234,23 +194,6 @@
  */
 #ifndef MEMP_NUM_PBUF
 #define MEMP_NUM_PBUF                   16
-#endif
-
-/**
- * MEMP_NUM_RAW_PCB: Number of raw connection PCBs
- * (requires the LWIP_RAW option)
- */
-#ifndef MEMP_NUM_RAW_PCB
-#define MEMP_NUM_RAW_PCB                4
-#endif
-
-/**
- * MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
- * per active UDP "connection".
- * (requires the LWIP_UDP option)
- */
-#ifndef MEMP_NUM_UDP_PCB
-#define MEMP_NUM_UDP_PCB                4
 #endif
 
 /**
@@ -275,25 +218,6 @@
  */
 #ifndef MEMP_NUM_TCP_SEG
 #define MEMP_NUM_TCP_SEG                16
-#endif
-
-/**
- * MEMP_NUM_REASSDATA: the number of IP packets simultaneously queued for
- * reassembly (whole packets, not fragments!)
- */
-#ifndef MEMP_NUM_REASSDATA
-#define MEMP_NUM_REASSDATA              5
-#endif
-
-/**
- * MEMP_NUM_FRAG_PBUF: the number of IP fragments simultaneously sent
- * (fragments, not whole packets!).
- * This is only used with IP_FRAG_USES_STATIC_BUF==0 and
- * LWIP_NETIF_TX_SINGLE_PBUF==0 and only has to be > 1 with DMA-enabled MACs
- * where the packet is not yet sent when netif->output returns.
- */
-#ifndef MEMP_NUM_FRAG_PBUF
-#define MEMP_NUM_FRAG_PBUF              15
 #endif
 
 /**
