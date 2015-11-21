@@ -350,11 +350,10 @@ sys_timeouts_mbox_fetch(sys_mbox_t *mbox, void **msg)
       if (handler != NULL) {
         /* For LWIP_TCPIP_CORE_LOCKING, lock the core before calling the
            timeout handler function. */
-        LOCK_TCPIP_CORE();
+        //LOCK_TCPIP_CORE();
         handler(arg);
-        UNLOCK_TCPIP_CORE();
+        //UNLOCK_TCPIP_CORE();
       }
-      LWIP_TCPIP_THREAD_ALIVE();
 
       /* We try again to fetch a message from the mbox. */
       goto again;
