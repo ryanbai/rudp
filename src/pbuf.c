@@ -87,18 +87,6 @@
 #define PBUF_POOL_IS_EMPTY()
 #else /* !LWIP_TCP || !TCP_QUEUE_OOSEQ || !PBUF_POOL_FREE_OOSEQ */
 
-#if !NO_SYS
-#ifndef PBUF_POOL_FREE_OOSEQ_QUEUE_CALL
-#include "lwip/tcpip.h"
-#define PBUF_POOL_FREE_OOSEQ_QUEUE_CALL()  do { \
-  if(tcpip_callback_with_block(pbuf_free_ooseq_callback, NULL, 0) != ERR_OK) { \
-      SYS_ARCH_PROTECT(old_level); \
-      pbuf_free_ooseq_pending = 0; \
-      SYS_ARCH_UNPROTECT(old_level); \
-  } } while(0)
-#endif /* PBUF_POOL_FREE_OOSEQ_QUEUE_CALL */
-#endif /* !NO_SYS */
-
 volatile u8_t pbuf_free_ooseq_pending;
 #define PBUF_POOL_IS_EMPTY() pbuf_pool_is_empty()
 
@@ -150,24 +138,10 @@ pbuf_free_ooseq_callback(void *arg)
 static void
 pbuf_pool_is_empty(void)
 {
-#ifndef PBUF_POOL_FREE_OOSEQ_QUEUE_CALL
   SYS_ARCH_DECL_PROTECT(old_level);
   SYS_ARCH_PROTECT(old_level);
   pbuf_free_ooseq_pending = 1;
   SYS_ARCH_UNPROTECT(old_level);
-#else /* PBUF_POOL_FREE_OOSEQ_QUEUE_CALL */
-  u8_t queued;
-  SYS_ARCH_DECL_PROTECT(old_level);
-  SYS_ARCH_PROTECT(old_level);
-  queued = pbuf_free_ooseq_pending;
-  pbuf_free_ooseq_pending = 1;
-  SYS_ARCH_UNPROTECT(old_level);
-
-  if(!queued) {
-    /* queue a call to pbuf_free_ooseq if not already queued */
-    PBUF_POOL_FREE_OOSEQ_QUEUE_CALL();
-  }
-#endif /* PBUF_POOL_FREE_OOSEQ_QUEUE_CALL */
 }
 #endif /* !LWIP_TCP || !TCP_QUEUE_OOSEQ || !PBUF_POOL_FREE_OOSEQ */
 
