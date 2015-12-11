@@ -56,10 +56,6 @@
 #if (LWIP_TCP && (MEMP_NUM_TCP_PCB<=0))
   #error "If you want to use TCP, you have to define MEMP_NUM_TCP_PCB>=1 in your lwipopts.h"
 #endif
-/* There must be sufficient timeouts, taking into account requirements of the subsystems. */
-#if LWIP_TIMERS && (MEMP_NUM_SYS_TIMEOUT < LWIP_TCP)
-  #error "MEMP_NUM_SYS_TIMEOUT is too low to accomodate all required timeouts"
-#endif
 #if (IP_REASSEMBLY && (MEMP_NUM_REASSDATA > IP_REASS_MAX_PBUFS))
   #error "MEMP_NUM_REASSDATA > IP_REASS_MAX_PBUFS doesn't make sense since each struct ip_reassdata must hold 2 pbufs at least!"
 #endif
@@ -171,8 +167,4 @@ lwip_init(void)
 #if LWIP_TCP
   tcp_init();
 #endif /* LWIP_TCP */
-
-#if LWIP_TIMERS
-  sys_timeouts_init();
-#endif /* LWIP_TIMERS */
 }

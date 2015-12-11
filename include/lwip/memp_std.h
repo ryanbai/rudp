@@ -35,10 +35,6 @@ LWIP_MEMPOOL(TCP_PCB_LISTEN, MEMP_NUM_TCP_PCB_LISTEN,  sizeof(struct tcp_pcb_lis
 LWIP_MEMPOOL(TCP_SEG,        MEMP_NUM_TCP_SEG,         sizeof(struct tcp_seg),        "TCP_SEG")
 #endif /* LWIP_TCP */
 
-#if (!NO_SYS || (NO_SYS && !NO_SYS_NO_TIMERS)) /* LWIP_TIMERS */
-LWIP_MEMPOOL(SYS_TIMEOUT,    MEMP_NUM_SYS_TIMEOUT,     sizeof(struct sys_timeo),      "SYS_TIMEOUT")
-#endif /* LWIP_TIMERS */
-
 /*
  * A list of pools of pbuf's used by LWIP.
  *

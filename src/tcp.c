@@ -2030,4 +2030,9 @@ tcp_pcbs_sane(void)
 }
 #endif /* TCP_DEBUG */
 
+//
+void tcp_timer_needed(void)
+{
+}
+
 #endif /* LWIP_TCP */

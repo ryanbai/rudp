@@ -44,7 +44,6 @@
 #include "lwip/pbuf.h"
 #include "lwip/tcp_impl.h"
 #include "lwip/sys.h"
-#include "lwip/timers.h"
 #include "lwip/stats.h"
 
 #include <string.h>
