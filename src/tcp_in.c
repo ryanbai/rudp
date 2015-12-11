@@ -41,24 +41,23 @@
  *
  */
 
-#include "lwip/opt.h"
+#include <stddef.h>
+
+#include "../include/lwip/cc.h"
+#include "../include/lwip/debug.h"
+#include "../include/lwip/err.h"
+#include "../include/lwip/lwipopts.h"
+#include "../include/lwip/opt.h"
+#include "../include/lwip/pbuf.h"
+#include "../include/lwip/tcp.h"
 
 #if LWIP_TCP /* don't build if not configured for use in lwipopts.h */
 
 #include "lwip/tcp_impl.h"
 #include "lwip/def.h"
-//#include "lwip/ip_addr.h"
-//#include "lwip/netif.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
-//#include "lwip/inet_chksum.h"
 #include "lwip/stats.h"
-//#include "lwip/ip6.h"
-//#include "lwip/ip6_addr.h"
-//#include "lwip/inet_chksum.h"
-#if LWIP_ND6_TCP_REACHABILITY_HINTS
-//#include "lwip/nd6.h"
-#endif /* LWIP_ND6_TCP_REACHABILITY_HINTS */
 
 /** Initial CWND calculation as defined RFC 2581 */
 #define LWIP_TCP_CALC_INITIAL_CWND(mss) LWIP_MIN((4U * (mss)), LWIP_MAX((2U * (mss)), 4380U));
@@ -184,7 +183,6 @@ tcp_input(struct ip_addr_t remote_udp_ip, u16_t remote_udp_port, struct pbuf *p)
      for an active connection. */
   prev = NULL;
 
-  
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
     LWIP_ASSERT("tcp_input: active pcb->state != CLOSED", pcb->state != CLOSED);
     LWIP_ASSERT("tcp_input: active pcb->state != TIME-WAIT", pcb->state != TIME_WAIT);
@@ -225,27 +223,12 @@ tcp_input(struct ip_addr_t remote_udp_ip, u16_t remote_udp_port, struct pbuf *p)
 
     /* Finally, if we still did not get a match, we check all PCBs that
        are LISTENing for incoming connections. */
+    /*
+     * tcp_listen_pcbs这个列表无需支持多个。 add by ryanbai.
+     */
     prev = NULL;
-    for(lpcb = tcp_listen_pcbs.listen_pcbs; lpcb != NULL; lpcb = lpcb->next) {
-        // TODO: only listen(check) on port?
-        // 遗留问题，这里需要保留local_addr和local_port，否则不能同时出现多个监听的情况。
-      //if (lpcb->local_port == remote_udp_port) {
-            break;
-      //}
-      //prev = (struct tcp_pcb *)lpcb;
-    }
+    lpcb = tcp_listen_pcbs.listen_pcbs;
     if (lpcb != NULL) {
-      /* Move this PCB to the front of the list so that subsequent
-         lookups will be faster (we exploit locality in TCP segment
-         arrivals). */
-      if (prev != NULL) {
-        ((struct tcp_pcb_listen *)prev)->next = lpcb->next;
-              /* our successor is the remainder of the listening list */
-        lpcb->next = tcp_listen_pcbs.listen_pcbs;
-              /* put this listening pcb at the head of the listening list */
-        tcp_listen_pcbs.listen_pcbs = lpcb;
-      }
-    
       LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_input: packed for LISTENing connection.\n"));
       struct connect_id_t conn_id;
       conn_id.connid1 = tcphdr->connid1;

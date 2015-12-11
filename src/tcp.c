@@ -47,14 +47,10 @@
 #include "lwip/def.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
-//#include "lwip/snmp.h"
 #include "lwip/tcp.h"
 #include "lwip/tcp_impl.h"
 #include "lwip/debug.h"
 #include "lwip/stats.h"
-//#include "lwip/ip6.h"
-//#include "lwip/ip6_addr.h"
-//#include "lwip/nd6.h"
 
 #include <string.h>
 
@@ -1678,7 +1674,6 @@ tcp_pcb_purge(struct tcp_pcb *pcb)
         tcp_listen_pcbs.listen_pcbs != NULL);
       for (lpcb = tcp_listen_pcbs.listen_pcbs; lpcb != NULL; lpcb = lpcb->next) {
         if ((lpcb->local_port == pcb->local_port) &&
-            IP_PCB_IPVER_EQ(pcb, lpcb) &&
             (ip_addr_isany(&lpcb->local_ip) ||
              ip_addr_cmp(&pcb->local_ip, &lpcb->local_ip))) {
             /* port and address of the listen pcb match the timed-out pcb */

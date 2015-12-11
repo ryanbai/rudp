@@ -170,6 +170,9 @@ struct ip_addr_t {
 #define ip_addr_copy(dest, src) ((dest).addr = (src).addr)
 #define ip_addr_cmp(addr1, addr2) ((addr1)->addr == (addr2)->addr)
 
+#define IPADDR_ANY          ((u32_t)0x00000000UL)
+#define ip_addr_isany(addr1) ((addr1) == NULL || (addr1)->addr == IPADDR_ANY)
+
 struct connect_id_t {
     u32_t connid1;
     u32_t connid2;
@@ -181,7 +184,7 @@ struct connect_id_t {
 */
 #define TCP_PCB_COMMON(type) \
   /* ip addresses in network byte order */ \
-  /*ip_addr_t local_ip;*/ \
+  struct ip_addr_t local_ip; \
   struct ip_addr_t remote_ip; \
   type *next; /* for the linked list */ \
   void *callback_arg; \
