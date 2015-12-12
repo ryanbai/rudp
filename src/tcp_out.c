@@ -46,12 +46,7 @@
 #include "lwip/def.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
-//#include "lwip/ip_addr.h"
 #include "lwip/stats.h"
-//#include "lwip/inet_chksum.h"
-#if LWIP_TCP_TIMESTAMPS
-#include "lwip/sys.h"
-#endif
 
 #include <string.h>
 
@@ -864,7 +859,7 @@ tcp_build_timestamp_option(struct tcp_pcb *pcb, u32_t *opts)
 {
   /* Pad with two NOP options to make everything nicely aligned */
   opts[0] = PP_HTONL(0x0101080A);
-  opts[1] = htonl(sys_now());
+ //opts[1] = htonl(sys_now());
   opts[2] = htonl(pcb->ts_recent);
 }
 #endif

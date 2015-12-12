@@ -43,7 +43,6 @@
 #include "lwip/memp.h"
 #include "lwip/pbuf.h"
 #include "lwip/tcp_impl.h"
-#include "lwip/sys.h"
 #include "lwip/stats.h"
 
 #include <string.h>
@@ -392,11 +391,9 @@ memp_malloc_fn(memp_t type, const char* file, const int line)
 #endif
 {
   struct memp *memp;
-  SYS_ARCH_DECL_PROTECT(old_level);
  
   LWIP_ERROR("memp_malloc: type < MEMP_MAX", (type < MEMP_MAX), return NULL;);
 
-  SYS_ARCH_PROTECT(old_level);
 #if MEMP_OVERFLOW_CHECK >= 2
   memp_overflow_check_all();
 #endif /* MEMP_OVERFLOW_CHECK >= 2 */
@@ -419,7 +416,6 @@ memp_malloc_fn(memp_t type, const char* file, const int line)
     MEMP_STATS_INC(err, type);
   }
 
-  SYS_ARCH_UNPROTECT(old_level);
 
   return memp;
 }
@@ -437,7 +433,6 @@ memp_free(memp_t type, void *mem)
 #ifdef LWIP_HOOK_MEMP_AVAILABLE
   struct memp *old_first;
 #endif
-  SYS_ARCH_DECL_PROTECT(old_level);
 
   if (mem == NULL) {
     return;
@@ -447,7 +442,6 @@ memp_free(memp_t type, void *mem)
 
   memp = (struct memp *)(void *)((u8_t*)mem - MEMP_SIZE);
 
-  SYS_ARCH_PROTECT(old_level);
 #if MEMP_OVERFLOW_CHECK
 #if MEMP_OVERFLOW_CHECK >= 2
   memp_overflow_check_all();
@@ -469,7 +463,6 @@ memp_free(memp_t type, void *mem)
   LWIP_ASSERT("memp sanity", memp_sanity());
 #endif /* MEMP_SANITY_CHECK */
 
-  SYS_ARCH_UNPROTECT(old_level);
 #ifdef LWIP_HOOK_MEMP_AVAILABLE
   if (old_first == NULL) {
     LWIP_HOOK_MEMP_AVAILABLE(type);

@@ -40,7 +40,6 @@
 
 #include "lwip/init.h"
 #include "lwip/stats.h"
-#include "lwip/sys.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/pbuf.h"
@@ -158,9 +157,6 @@ lwip_init(void)
 {
   /* Modules initialization */
   stats_init();
-#if !NO_SYS
-  sys_init();
-#endif /* !NO_SYS */
   mem_init();
   memp_init();
   pbuf_init();

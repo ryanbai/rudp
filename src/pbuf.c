@@ -68,7 +68,6 @@
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/pbuf.h"
-#include "lwip/sys.h"
 #if LWIP_TCP && TCP_QUEUE_OOSEQ
 #include "lwip/tcp_impl.h"
 #endif
@@ -105,11 +104,8 @@ void
 pbuf_free_ooseq(void)
 {
   struct tcp_pcb* pcb;
-  SYS_ARCH_DECL_PROTECT(old_level);
 
-  SYS_ARCH_PROTECT(old_level);
   pbuf_free_ooseq_pending = 0;
-  SYS_ARCH_UNPROTECT(old_level);
 
   for (pcb = tcp_active_pcbs; NULL != pcb; pcb = pcb->next) {
     if (NULL != pcb->ooseq) {
@@ -138,10 +134,7 @@ pbuf_free_ooseq_callback(void *arg)
 static void
 pbuf_pool_is_empty(void)
 {
-  SYS_ARCH_DECL_PROTECT(old_level);
-  SYS_ARCH_PROTECT(old_level);
   pbuf_free_ooseq_pending = 1;
-  SYS_ARCH_UNPROTECT(old_level);
 }
 #endif /* !LWIP_TCP || !TCP_QUEUE_OOSEQ || !PBUF_POOL_FREE_OOSEQ */
 
@@ -648,16 +641,13 @@ pbuf_free(struct pbuf *p)
    * obtain a zero reference count after decrementing*/
   while (p != NULL) {
     u16_t ref;
-    SYS_ARCH_DECL_PROTECT(old_level);
     /* Since decrementing ref cannot be guaranteed to be a single machine operation
      * we must protect it. We put the new ref into a local variable to prevent
      * further protection. */
-    SYS_ARCH_PROTECT(old_level);
     /* all pbufs in a chain are referenced at least once */
     LWIP_ASSERT("pbuf_free: p->ref > 0", p->ref > 0);
     /* decrease reference count (number of pointers to pbuf) */
     ref = --(p->ref);
-    SYS_ARCH_UNPROTECT(old_level);
     /* this pbuf is no longer referenced to? */
     if (ref == 0) {
       /* remember next pbuf in chain for next iteration */
@@ -729,12 +719,9 @@ pbuf_clen(struct pbuf *p)
 void
 pbuf_ref(struct pbuf *p)
 {
-  SYS_ARCH_DECL_PROTECT(old_level);
   /* pbuf given? */
   if (p != NULL) {
-    SYS_ARCH_PROTECT(old_level);
     ++(p->ref);
-    SYS_ARCH_UNPROTECT(old_level);
   }
 }
 
