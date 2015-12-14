@@ -115,7 +115,7 @@
 #define LWIP_DISABLE_MEMP_SANITY_CHECKS 0
 #endif
 
-#if 0
+#if 1
 
 /* TCP sanity checks */
 #if !LWIP_DISABLE_TCP_SANITY_CHECKS
