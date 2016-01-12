@@ -34,8 +34,15 @@
 
 /* Include some files for defining library routines */
 #include <string.h>
-#include <sys/time.h>
 #include <limits.h>
+
+/** 操作系统类型 */
+#if defined(__WINDOWS__) || defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64) || defined(__WIN32__) || defined(__TOS_WIN__)
+#define WINDOWS
+#elif defined(__linux__) || defined(linux) || defined(__linux) || defined(__LINUX__) || defined(LINUX) || defined(_LINUX)
+#define LINUX
+#else  
+#endif
 
 #define LWIP_TIMEVAL_PRIVATE 0
 
@@ -71,10 +78,23 @@ typedef unsigned long mem_ptr_t;
 #endif
 
 /* Compiler hints for packing structures */
+#ifdef WINDOWS
+#define PACK_STRUCT_FIELD(x) x
+#define PACK_STRUCT_STRUCT 
+#define PACK_STRUCT_USE_INCLUDES
+#elif defined LINUX
 #define PACK_STRUCT_FIELD(x) x
 #define PACK_STRUCT_STRUCT __attribute__((packed))
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
+#endif
+
+//strcat is not safe.
+#ifdef WINDOWS
+#define STRCAT(dest, len, src) strcat_s(dest, len, src)
+#elif defined LINUX
+#define STRCAT(dest, len, src) strcat(dest, src)
+#endif
 
 /* prototypes for printf() and abort() */
 #include <stdio.h>
@@ -90,5 +110,7 @@ typedef unsigned long mem_ptr_t;
 #endif
 
 #define LWIP_RAND() ((u32_t)rand())
+
+
 
 #endif /* LWIP_ARCH_CC_H */

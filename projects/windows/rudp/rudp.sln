@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rudp", "rudp\rudp.vcxproj", "{48226AF3-D428-473E-9B11-09EF466AD8B3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win_rudp_client", "win_rudp_client\win_rudp_client.vcxproj", "{97DE7A4F-AE81-4EE4-A214-A86436B1952D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{74EC6B33-1BC2-4064-A590-87AF5189E2E7} = {74EC6B33-1BC2-4064-A590-87AF5189E2E7}
+		{48226AF3-D428-473E-9B11-09EF466AD8B3} = {48226AF3-D428-473E-9B11-09EF466AD8B3}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win_rudp", "win_rudp\win_rudp.vcxproj", "{74EC6B33-1BC2-4064-A590-87AF5189E2E7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{48226AF3-D428-473E-9B11-09EF466AD8B3} = {48226AF3-D428-473E-9B11-09EF466AD8B3}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48226AF3-D428-473E-9B11-09EF466AD8B3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{48226AF3-D428-473E-9B11-09EF466AD8B3}.Debug|Win32.Build.0 = Debug|Win32
+		{48226AF3-D428-473E-9B11-09EF466AD8B3}.Release|Win32.ActiveCfg = Release|Win32
+		{48226AF3-D428-473E-9B11-09EF466AD8B3}.Release|Win32.Build.0 = Release|Win32
+		{97DE7A4F-AE81-4EE4-A214-A86436B1952D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97DE7A4F-AE81-4EE4-A214-A86436B1952D}.Debug|Win32.Build.0 = Debug|Win32
+		{97DE7A4F-AE81-4EE4-A214-A86436B1952D}.Release|Win32.ActiveCfg = Release|Win32
+		{97DE7A4F-AE81-4EE4-A214-A86436B1952D}.Release|Win32.Build.0 = Release|Win32
+		{74EC6B33-1BC2-4064-A590-87AF5189E2E7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74EC6B33-1BC2-4064-A590-87AF5189E2E7}.Debug|Win32.Build.0 = Debug|Win32
+		{74EC6B33-1BC2-4064-A590-87AF5189E2E7}.Release|Win32.ActiveCfg = Release|Win32
+		{74EC6B33-1BC2-4064-A590-87AF5189E2E7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

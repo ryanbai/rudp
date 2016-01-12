@@ -121,6 +121,11 @@ u32_t lwip_ntohl(u32_t x);
 
 #endif /* BYTE_ORDER == BIG_ENDIAN */
 
+/**
+* Function prototype for tcp send data.
+*/
+typedef int (*ip_output_fn)(char *data, int len, u32_t addr, u16_t remote_port);
+
 #ifdef __cplusplus
 }
 #endif

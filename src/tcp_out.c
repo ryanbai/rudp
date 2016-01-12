@@ -85,8 +85,9 @@
 
 /* Forward declarations.*/
 static err_t tcp_output_segment(struct tcp_seg *seg, struct tcp_pcb *pcb);
+static err_t ip_output_if(struct pbuf *data, struct ip_addr_t remote_ip, u16_t remote_port);
 
-err_t ip_output_if(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port);
+extern ip_output_fn ip_output;
 
 /** Allocate a pbuf and create a tcphdr at p->payload, used for output
  * functions other than the default tcp_output -> tcp_output_segment
@@ -1488,4 +1489,21 @@ tcp_zero_window_probe(struct tcp_pcb *pcb)
                           pcb->snd_nxt - 1, pcb->rcv_nxt, (int)err));
   return err;
 }
+
+err_t ip_output_if(struct pbuf *data, struct ip_addr_t remote_ip, u16_t remote_port)
+{
+    struct pbuf * p = data;
+    for (; p != NULL; p = p->next)
+    {
+        err_t err = ip_output(p->payload, p->len, remote_ip.addr, remote_port);
+        if (ERR_OK != err)
+        {
+            LWIP_DEBUGF(TCP_DEBUG, ("ip_output failed. err %d.\n", (int)err));
+            return err;
+        }
+    }
+
+    return ERR_OK;
+}
+
 #endif /* LWIP_TCP */

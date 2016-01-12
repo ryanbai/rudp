@@ -38,7 +38,7 @@ class LWIPEnvironment : public testing::Environment
 public:
     virtual void SetUp()
     {
-        lwip_init();
+        lwip_init(test_ip_output);
     }
     virtual void TearDown()
     {

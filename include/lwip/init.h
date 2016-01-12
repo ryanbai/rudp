@@ -63,7 +63,7 @@ extern "C" {
                         LWIP_VERSION_REVISION << 8 | LWIP_VERSION_RC)
 
 /* Modules initialization */
-void lwip_init(void);
+void lwip_init(ip_output_fn output_fn);
 
 #ifdef __cplusplus
 }

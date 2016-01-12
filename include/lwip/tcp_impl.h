@@ -39,11 +39,7 @@
 #include "lwip/tcp.h"
 #include "lwip/mem.h"
 #include "lwip/pbuf.h"
-//#include "lwip/ip.h"
-//#include "lwip/icmp.h"
 #include "lwip/err.h"
-//#include "lwip/ip6.h"
-//#include "lwip/ip6_addr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,7 +48,7 @@ extern "C" {
 /* Functions for interfacing with TCP: */
 
 /* Lower layer interface to TCP: */
-void             tcp_init    (void);  /* Initialize this module. */
+void             tcp_init(ip_output_fn output_fn);  /* Initialize this module. */
 void             tcp_tmr     (void);  /* Must be called every
                                          TCP_TMR_INTERVAL
                                          ms. (Typically 250 ms). */
@@ -160,7 +156,7 @@ err_t            tcp_process_refused_data(struct tcp_pcb *pcb);
  * Some fields are converted to host byte order in tcp_input().
  */
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/bpstruct.h"
+#  include "lwip/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
 struct tcp_hdr {
@@ -173,7 +169,7 @@ struct tcp_hdr {
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
 #ifdef PACK_STRUCT_USE_INCLUDES
-#  include "arch/epstruct.h"
+#  include "lwip/epstruct.h"
 #endif
 
 #define TCPH_HDRLEN(phdr) (ntohs((phdr)->_hdrlen_rsvd_flags) >> 12)
@@ -529,7 +525,6 @@ s16_t tcp_pcbs_sane(void);
 /** External function (implemented in timers.c), called when TCP detects
  * that a timer is needed (i.e. active- or time-wait-pcb found). */
 void tcp_timer_needed(void);
-err_t ip_output_if(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port);
 
 #if LWIP_IPV4
 void tcp_netif_ipv4_addr_changed(const ip4_addr_t* old_addr, const ip4_addr_t* new_addr);

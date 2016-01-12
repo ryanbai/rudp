@@ -42,7 +42,11 @@
 
 #include "cc.h"
 
+#ifdef WINDOWS
+#include <WinSock2.h>
+#elif defined LINUX
 #include <arpa/inet.h>
+#endif
 
 /** Temporary: define format string for size_t if not defined in cc.h */
 #ifndef SZT_F

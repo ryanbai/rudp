@@ -212,12 +212,12 @@ memp_overflow_check_element_overflow(struct memp *p, u16_t memp_type)
       char digit[] = "0";
       if(memp_type >= 10) {
         digit[0] = '0' + (memp_type/10);
-        strcat(errstr, digit);
+		STRCAT(errstr, 127, digit);
       }
       digit[0] = '0' + (memp_type%10);
-      strcat(errstr, digit);
+	  STRCAT(errstr, 127, digit);
 #if defined(LWIP_DEBUG) && MEMP_STATS
-      strcat(errstr, memp_overflow_names[memp_type]);
+	  STRCAT(errstr, 127, memp_overflow_names[memp_type]);
 #endif
       LWIP_ASSERT(errstr, 0);
     }
@@ -245,12 +245,12 @@ memp_overflow_check_element_underflow(struct memp *p, u16_t memp_type)
       char digit[] = "0";
       if(memp_type >= 10) {
         digit[0] = '0' + (memp_type/10);
-        strcat(errstr, digit);
+		STRCAT(errstr, 127, digit);
       }
       digit[0] = '0' + (memp_type%10);
-      strcat(errstr, digit);
+	  STRCAT(errstr, 127, digit);
 #if defined(LWIP_DEBUG) && MEMP_STATS
-      strcat(errstr, memp_overflow_names[memp_type]);
+	  STRCAT(errstr, 127, memp_overflow_names[memp_type]);
 #endif
       LWIP_ASSERT(errstr, 0);
     }

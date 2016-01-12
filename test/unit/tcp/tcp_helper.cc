@@ -11,12 +11,12 @@
 #error "This tests needs TCP- and MEMP-statistics enabled"
 #endif
 
-void ip_output_if_real(struct pbuf *p, ip_addr_t addr, u16_t port);
+void ip_output_if_real(char *p, int len, u32_t addr, u16_t port);
 extern "C"
 {
-err_t ip_output_if(struct pbuf *p, ip_addr_t addr, u16_t port)
+int test_ip_output(char *p, int len, u32_t addr, u16_t port)
 {
-    ip_output_if_real(p, addr, port);
+    ip_output_if_real(p, len, addr, port);
     return ERR_OK;
 }
 }
@@ -262,16 +262,22 @@ void ip_output_if_init()
     memset(&txcounters, 0, sizeof(struct test_tcp_txcounters));
 }
 
-void ip_output_if_real(struct pbuf *p, ip_addr_t addr, u16_t port)
+void ip_output_if_real(char *p, int len, u32_t addr, u16_t port)
 {
   txcounters.num_tx_calls++;
-  txcounters.num_tx_bytes += p->tot_len;
+  txcounters.num_tx_bytes += len;
   if (txcounters.copy_tx_packets) {
-      struct pbuf *p_copy = pbuf_alloc(PBUF_TRANSPORT, p->tot_len, PBUF_RAM);
-      err_t err;
+      struct pbuf *p_copy = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_RAM);
       ASSERT_TRUE(p_copy != NULL);
-      err = pbuf_copy(p_copy, p);
-      ASSERT_EQ(err , ERR_OK);
+      struct pbuf *p_iter = p_copy;
+      int offset = 0;
+      while (p_iter != NULL)
+      {
+          MEMCPY(p_iter->payload, p+offset, p_iter->len);
+          offset += p_iter->len;
+          p_iter = p_iter->next;
+      }
+
       if (txcounters.tx_packets == NULL) {
           txcounters.tx_packets = p_copy;
       } else {

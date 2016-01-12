@@ -45,6 +45,11 @@ err_t test_tcp_counters_recv(void* arg, struct tcp_pcb* pcb, struct pbuf* p, err
 
 struct tcp_pcb* test_tcp_new_counters_pcb(struct test_tcp_counters* counters);
 
+extern "C"
+{
+int test_ip_output(char *p, int len, u32_t addr, u16_t port);
+}
+
 /*void test_tcp_input(struct pbuf *p, struct netif *inp);
 
 void test_tcp_init_netif(struct netif *netif, struct test_tcp_txcounters *txcounters,

@@ -42,6 +42,7 @@ err_t on_recv(void *arg, rudp_pcb tpcb, struct pbuf *p, err_t err);
 err_t on_connect(void *arg, rudp_pcb tpcb, err_t err);
 err_t on_accept(void *arg, rudp_pcb newpcb, err_t err);
 void rudp_free(rudp_fd_ptr fd);
+int ip_output_if(char *p, int len, u32_t remote_ip, u16_t remote_port);
 
 void init_timer()
 {
@@ -77,7 +78,7 @@ int bind_udp(in_addr_t s_addr, u16_t port)
 
 int rudp_init()
 {
-    tcp_init();
+    tcp_init(ip_output_if);
     pbuf_init();
     memp_init();
 
@@ -385,7 +386,7 @@ int rudp_send(rudp_fd_ptr fd, const void* buf, size_t len)
     return tcp_write(fd->pcb, buf, len, 1);
 }
 
-err_t ip_output_if(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port)
+int ip_output_if(char *p, int len, u32_t remote_ip, u16_t remote_port)
 {
     // TODO, how to deal with block? platform dependency!!
     // if ever blocked, tcp_txnow when recover
@@ -393,12 +394,12 @@ err_t ip_output_if(struct pbuf *p, struct ip_addr_t remote_ip, u16_t remote_port
     struct sockaddr_in remaddr;     /* remote address */
     memset((char *)&remaddr, 0, sizeof(remaddr));
     remaddr.sin_family = AF_INET;
-    remaddr.sin_addr.s_addr = remote_ip.addr;
+    remaddr.sin_addr.s_addr = remote_ip;
     remaddr.sin_port = htons(remote_port);
     ;
     printf("udp sendto %s:%u\n", inet_ntoa(remaddr.sin_addr), remote_port);
 
-    int ret = sendto(udp_fd, p->payload, p->len, 0, (struct sockaddr *)&remaddr, sizeof(remaddr));
+    int ret = sendto(udp_fd, p, len, 0, (struct sockaddr *)&remaddr, sizeof(remaddr));
     if (ret > 0)
         return ERR_OK;
     perror("udp sendto failed");

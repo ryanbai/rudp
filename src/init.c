@@ -153,7 +153,7 @@
  * Initialize all modules.
  */
 void
-lwip_init(void)
+lwip_init(ip_output_fn output_fn)
 {
   /* Modules initialization */
   stats_init();
@@ -161,6 +161,6 @@ lwip_init(void)
   memp_init();
   pbuf_init();
 #if LWIP_TCP
-  tcp_init();
+  tcp_init(output_fn);
 #endif /* LWIP_TCP */
 }

@@ -124,15 +124,20 @@ static u8_t tcp_timer;
 static u8_t tcp_timer_ctr;
 static u16_t tcp_new_port(void);
 
+/*output callback function*/
+ip_output_fn ip_output;
+
 /**
  * Initialize this module.
  */
 void
-tcp_init(void)
+tcp_init(ip_output_fn output_fn)
 {
 #if LWIP_RANDOMIZE_INITIAL_LOCAL_PORTS && defined(LWIP_RAND)
   tcp_port = TCP_ENSURE_LOCAL_PORT_RANGE(LWIP_RAND());
 #endif /* LWIP_RANDOMIZE_INITIAL_LOCAL_PORTS && defined(LWIP_RAND) */
+
+  ip_output = output_fn;
 }
 
 /**

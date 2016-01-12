@@ -164,12 +164,12 @@ enum tcp_state {
 #define DEF_ACCEPT_CALLBACK
 #endif /* LWIP_CALLBACK_API */
 
+/*ip addr struct*/
 struct ip_addr_t {
-  u32_t addr;
+    u32_t addr;
 };
 #define ip_addr_copy(dest, src) ((dest).addr = (src).addr)
 #define ip_addr_cmp(addr1, addr2) ((addr1)->addr == (addr2)->addr)
-
 #define IPADDR_ANY          ((u32_t)0x00000000UL)
 #define ip_addr_isany(addr1) ((addr1) == NULL || (addr1)->addr == IPADDR_ANY)
 
